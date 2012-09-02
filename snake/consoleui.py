@@ -67,8 +67,10 @@ class ConsoleUI(ui.UI):
 
     def __del__(self):
         if os.name == "posix":
-            termios.tcsetattr(self.__stdin_fd, termios.TCSADRAIN, self.__old_stdin_settings)
-            termios.tcsetattr(self.__stdout_fd, termios.TCSADRAIN, self.__old_stdout_settings)
+            termios.tcsetattr(self.__stdin_fd, termios.TCSADRAIN,\
+             self.__old_stdin_settings)
+            termios.tcsetattr(self.__stdout_fd, termios.TCSADRAIN,\
+             self.__old_stdout_settings)
             sys.stdout = sys.__stdout__
 
     def _clear_screen(self, numlines=100):
@@ -87,7 +89,8 @@ class ConsoleUI(ui.UI):
             self.display_text('\n' * numlines)
 
     def start_listening(self):
-        self.background_thread = threading.Thread(target=self._background_action, args=())
+        self.background_thread = threading.Thread(
+         target=self._background_action, args=())
         self._current_action = None
         self._should_stop = False
         self._current_player_count = \
