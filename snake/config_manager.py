@@ -19,7 +19,7 @@ class ConfigurationManager:
     def __init__(self):
         pass
 
-    def get_preferred_UI(self):
+    def get_preferred_ui(self):
         return ConfigurationManager.UI_CONSOLE
 
     def get_preferred_keys(self):
@@ -49,4 +49,4 @@ class ConfigurationManager:
         return 4
 
     def get_iteration_time(self):
-        return 0.3
+        return 0.1

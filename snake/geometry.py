@@ -38,6 +38,11 @@ class Point:
     def __repr__(self):
         return "Point with coordinates: {0}, {1}".format(self.x, self.y)
 
+    def __eq__(self, other_point):
+        if other_point is None:
+            return self is None
+        return (self.x == other_point.x) and (self.y == other_point.y)
+
 
 class FreeVector:
     """A class representing a free vector,

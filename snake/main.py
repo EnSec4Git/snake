@@ -16,7 +16,7 @@ import snake.ui
 
 def main():
     configuration_manager = config_manager.ConfigurationManager()
-    if configuration_manager.get_preferred_UI() == config_manager.ConfigurationManager.UI_CONSOLE:
+    if configuration_manager.get_preferred_ui() == config_manager.ConfigurationManager.UI_CONSOLE:
         ui = consoleui.ConsoleUI(configuration_manager)
     while True:
         menu_choice = ui.main_menu()

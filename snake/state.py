@@ -33,12 +33,8 @@ class State:
         for (i, pawn) in enumerate(self.pawns):
             if pawn == None:
                 continue
-            #print("Head:", pawn.head())
-            #time.sleep(0.3)
             next_cell = \
                 self.level.next_cell(pawn.head(), pawn.current_direction)
-            #print("Next cell:", next_cell)
-            #time.sleep(0.3)
             if next_cell == None:
                 self.pawns[i] = None
             else:
@@ -70,3 +66,7 @@ class State:
             if pawn != None:
                 count += 1
         return count
+
+    def __eq__(self, other_state):
+        return (self.pawns == other_state.pawns) and \
+         (self.level == other_state.level)

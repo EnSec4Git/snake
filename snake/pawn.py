@@ -31,3 +31,11 @@ class Pawn:
         self.cells.insert(0, next_head)
         if not increase_size:
             self.cells.pop()
+
+    def __eq__(self, other_pawn):
+        if other_pawn is None:
+            return self is None
+        if self.cells != other_pawn.cells: return False
+        if self.current_direction != other_pawn.current_direction:
+            return False
+        return True

@@ -61,7 +61,7 @@ class LevelLoader:
         return level
 
     def create_random_level(self):
-        pass
+        raise NotImplementedError("Level.create_random_level unimplemented")
 
     def _cell_for_character(self, ch):
         if ch == ' ':
@@ -125,6 +125,16 @@ class Level:
             (point.y < 0 or point.y >= self.height):
             return None
         return self.table[point.x][point.y]
+
+    def __eq__(self, other_level):
+        if self.table != other_level.table: return False
+        if self._starting_positions != other_level._starting_positions:
+            return False
+        if self._apple_count != other_level._apple_count: return False
+        if self.height != other_level.height: return False
+        if self.width != other_level.width: return False
+        if self.topology != other_level.topology: return False
+        return True
 
     def player_starting_position(self, player_number):
         return self._starting_positions[player_number]

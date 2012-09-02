@@ -9,6 +9,7 @@
 # Licence:     GLPv3
 #-------------------------------------------------------------------------------
 
+
 def run_tests():
     verbosity = 1
     interactive = True
