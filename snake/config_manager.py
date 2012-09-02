@@ -12,6 +12,7 @@
 import snake.player as player
 import snake.ui as ui
 
+
 class ConfigurationManager:
     UI_CONSOLE = 1
 
@@ -22,18 +23,21 @@ class ConfigurationManager:
         return ConfigurationManager.UI_CONSOLE
 
     def get_preferred_keys(self):
-        return {b'Q':ui.UI.ACTION_QUIT,
-                b'R':ui.UI.ACTION_RESTART,
-                b'N':ui.UI.ACTION_NEW_GAME}
+        return {'Q': ui.UI.ACTION_QUIT,
+                'R': ui.UI.ACTION_RESTART,
+                'N': ui.UI.ACTION_NEW_GAME,
+                'P': ui.UI.ACTION_SAVE,
+                'L': ui.UI.ACTION_LOAD,
+                'O': ui.UI.ACTION_OPEN}
 
     def get_preferred_keys_for_player(self, i):
         if i != 0:
             return None
         pl = player.Player
-        return {b'A':pl.PLAYER_ACTION_LEFT,
-                b'D':pl.PLAYER_ACTION_RIGHT,
-                b'W':pl.PLAYER_ACTION_UP,
-                b'S':pl.PLAYER_ACTION_DOWN}
+        return {'A': pl.PLAYER_ACTION_LEFT,
+                'D': pl.PLAYER_ACTION_RIGHT,
+                'W': pl.PLAYER_ACTION_UP,
+                'S': pl.PLAYER_ACTION_DOWN}
 
     def get_player_count(self):
         return 1

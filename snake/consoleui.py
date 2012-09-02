@@ -13,6 +13,7 @@ import threading
 import os
 import copy
 import time
+import sys
 import snake.level as level
 import snake.ui as ui
 import snake.config_manager
@@ -21,18 +22,49 @@ import snake.player as player
 if os.name in ("nt", "dos", "ce"):
     import msvcrt
 elif os.name == "posix":
-    pass
+    import select
+    import termios
+    import tty
+
+
+class Unbuffered:
+    def __init__(self, stream):
+        self.stream = stream
+
+    def write(self, data):
+        self.stream.write(data)
+        self.stream.flush()
+
+    def __getattr__(self, attr):
+        return getattr(self.stream, attr)
+
 
 class ConsoleUI(ui.UI):
     def __init__(self, configuration_manager):
         super().__init__(configuration_manager)
+        if os.name == "posix":
+            self.__stdin_fd = sys.stdin.fileno()
+            self.__stdout_fd = sys.stdout.fileno()
+            self.__old_stdin_settings = termios.tcgetattr(self.__stdin_fd)
+            self.__old_stdout_settings = termios.tcgetattr(self.__stdout_fd)
+            tty.setraw(sys.stdin)
+            tty.setraw(sys.stdout)
+            sys.stdout = Unbuffered(sys.stdout)
+            self.newline_character = '\n\r'
+        else:
+            self.newline_character = '\n'
+
+    def __del__(self):
+        if os.name == "posix":
+            termios.tcsetattr(self.__stdin_fd, termios.TCSADRAIN, self.__old_stdin_settings)
+            termios.tcsetattr(self.__stdout_fd, termios.TCSADRAIN, self.__old_stdout_settings)
+            sys.stdout = sys.__stdout__
 
     def _clear_screen(self, numlines=100):
         """Clears the console screen.
         This code is supposed to work for Unix, Windows and has a fallback for
         other OSes.
         """
-        #return
         if os.name == "posix":
             # Unix/Linux/MacOS/BSD/etc
             os.system('clear')
@@ -41,7 +73,7 @@ class ConsoleUI(ui.UI):
             os.system('CLS')
         else:
             # Fallback for other operating systems.
-            print('\n' * numlines)
+            self.display_text('\n' * numlines)
 
     def start_listening(self):
         self.background_thread = threading.Thread(target=self._background_action, args=())
@@ -71,53 +103,70 @@ class ConsoleUI(ui.UI):
                 table_to_draw[cell.x][cell.y] = level.Level.CELL_SNAKE
         string_to_print = self.__string_for_table(current_level, table_to_draw)
         self._clear_screen()
-        print(string_to_print)
-
+        self.display_text(string_to_print)
 
     def get_user_action(self):
         cur_action_copy = copy.copy(self._current_action)
+        self._current_action = None
         if cur_action_copy == ui.UI.ACTION_QUIT:
             return cur_action_copy
         elif cur_action_copy == ui.UI.ACTION_RESTART:
+            return cur_action_copy
+        elif cur_action_copy == ui.UI.ACTION_SAVE:
             return cur_action_copy
         else:
             return None
 
     def get_player_action(self, i):
         player_action_copy = copy.copy(self._current_player_actions[i])
+        self._current_player_actions[i] = None
         return player_action_copy
 
     def display_text(self, text):
-        print(text)
+        print(text, self.newline_character)
 
     def main_menu(self):
         pref_keys = self.configuration_manager.get_preferred_keys()
-        pref_keys_rev = dict((v,k) for k, v in pref_keys.items())
-        print("Press {0} to start, {1} to quit".format(chr(ord(pref_keys_rev[ui.UI.ACTION_NEW_GAME])), chr(ord(pref_keys_rev[ui.UI.ACTION_QUIT]))))
+        pref_keys_rev = dict((v, k) for k, v in pref_keys.items())
+        self.display_text("Press {0} to start, {1} to quit, "
+             "{2} to load and {3} to open level".format(\
+                pref_keys_rev[ui.UI.ACTION_NEW_GAME],\
+                pref_keys_rev[ui.UI.ACTION_QUIT],\
+                pref_keys_rev[ui.UI.ACTION_LOAD],\
+                pref_keys_rev[ui.UI.ACTION_OPEN]))
         while True:
             character = self._cp_get_char()
             if character == pref_keys_rev[ui.UI.ACTION_NEW_GAME]:
-                return True
+                return ui.UI.ACTION_NEW_GAME
             elif character == pref_keys_rev[ui.UI.ACTION_QUIT]:
-                return False
+                return ui.UI.ACTION_QUIT
+            elif character == pref_keys_rev[ui.UI.ACTION_LOAD]:
+                return ui.UI.ACTION_LOAD
+            elif character == pref_keys_rev[ui.UI.ACTION_OPEN]:
+                return ui.UI.ACTION_OPEN
             else:
                 pass
 
-    def _cp_kbhit(self):
+    def get_line(self, prompt=""):
+        return input(prompt)
+
+    def _cp_kbhit_or_sleep(self, timeout):
         if os.name == "posix":
-            raise NotImplementedError("kbhit not implemented on POSIX yet")
+            res = select.select([sys.stdin], [], [], timeout)
+            return res[0] != []
         elif os.name in ("nt", "dos", "ce"):
+            time.sleep(timeout)
             return msvcrt.kbhit()
         else:
             raise NotImplementedError("kbhit not implemented")
 
     def _cp_get_char(self):
         if os.name == "posix":
+            return sys.stdin.read(1)
             # Unix/Linux/MacOS/BSD/etc
-            raise NotImplementedError("get_char not implemented on POSIX yet")
         elif os.name in ("nt", "dos", "ce"):
             # DOS/Windows
-            return msvcrt.getch()
+            return (msvcrt.getch()).decode(sys.stdin.encoding)
         else:
             # Fallback for other operating systems.
             raise NotImplementedError("get_char not implemented")
@@ -126,10 +175,8 @@ class ConsoleUI(ui.UI):
         while True:
             if self._should_stop:
                 return
-            time.sleep(0.1)
-            if self._cp_kbhit():
+            if self._cp_kbhit_or_sleep(0.1):
                 ch = self._cp_get_char()
-                #print("New character press:", ch)
                 for i in range(0, self._current_player_count):
                     if ch in self._player_key_bindings[i]:
                         current_keys = self._player_key_bindings[i]
@@ -157,5 +204,5 @@ class ConsoleUI(ui.UI):
                 elif cell == level.Level.CELL_SNAKE:
                     cell_char = 'o'
                 line = line + cell_char
-            string = string + line + '\n'
+            string = string + line + self.newline_character
         return string

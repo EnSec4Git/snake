@@ -11,6 +11,7 @@
 
 import snake.player
 
+
 class HumanPlayer(snake.player.Player):
 
     def __init__(self, user_interface, index):
@@ -18,8 +19,5 @@ class HumanPlayer(snake.player.Player):
         self.index = index
 
     def get_next_move(self, state):
-        #print(self.ui)
-        #print(self.index)
         current_action = self.ui.get_player_action(self.index)
-        #print(current_action)
         return current_action

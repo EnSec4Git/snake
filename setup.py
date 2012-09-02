@@ -10,6 +10,7 @@
 #-------------------------------------------------------------------------------
 
 from distutils.core import setup
+#import setuptools
 
 setup(name='Snake',
       version='0.2',
@@ -17,5 +18,5 @@ setup(name='Snake',
       author='Yavor Papazov',
       author_email='yavorpap@abv.bg',
       packages=['snake', 'snake.tests'],
-      test_suite = "tests",
+      test_suite="tests"
      )

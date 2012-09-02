@@ -11,6 +11,7 @@
 
 import math
 
+
 class Point:
     """A class representing a point with integer coordinates.
     """
@@ -21,12 +22,12 @@ class Point:
     def __add__(self, vector):
         x = self.x + vector.x
         y = self.y + vector.y
-        return Point(x,y)
+        return Point(x, y)
 
     def __mod__(self, n):
         x = self.x % n
         y = self.y % n
-        return Point(x,y)
+        return Point(x, y)
 
     @staticmethod
     def vector_from_points(first_point, second_point):
@@ -36,6 +37,7 @@ class Point:
 
     def __repr__(self):
         return "Point with coordinates: {0}, {1}".format(self.x, self.y)
+
 
 class FreeVector:
     """A class representing a free vector,
