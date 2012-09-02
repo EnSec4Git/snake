@@ -1,1 +1,1 @@
-python -m snake.main
+python3 -m snake.main
