@@ -11,6 +11,15 @@
 
 
 class UI:
+    """
+    This class is an Abstract Base Class (ABC) for the user interface
+    of the game. Currently it is inherited only by the ConsoleUI
+    class, but any new implementation has to implement only the methods
+    put forth in this class.
+
+    An implementation that uses PyQt, for example, or another GUI library
+    is feasible.
+    """
     ACTION_RESTART = 4
     ACTION_QUIT = 5
     ACTION_NEW_GAME = 6

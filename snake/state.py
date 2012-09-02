@@ -15,6 +15,16 @@ import snake.level
 
 
 class State:
+    """
+    This class contains all game-relevant information that is mutated
+    during the course of the game: that is the pawns and the level.
+
+    The level is mutated, since apples are removed from it when
+    a player eats them.
+
+    The class can be pickled and this is the way Save/Load functionality
+    is implemented.
+    """
     def __init__(self, level, pawns):
         self.level = level
         self.pawns = pawns

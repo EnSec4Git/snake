@@ -1,6 +1,6 @@
 #-------------------------------------------------------------------------------
 # Name:        main
-# Purpose:
+# Purpose:     Start the game and run the main menu loop
 #
 # Author:      Yavor
 #

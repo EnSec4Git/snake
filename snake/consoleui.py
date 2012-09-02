@@ -28,6 +28,11 @@ elif os.name == "posix":
 
 
 class Unbuffered:
+    """
+    A class that wraps over a stream and creates
+    an unbuffered version of it. Required under Linux
+    to successfully write single characters to sys.stdout.
+    """
     def __init__(self, stream):
         self.stream = stream
 
@@ -40,6 +45,12 @@ class Unbuffered:
 
 
 class ConsoleUI(ui.UI):
+    """
+    This class contains a possible implementation of a User Interface
+    for the Command Prompt (Windows) / Terminal (Linux).
+    Currently tested under Windows 7 and Ubuntu 12.04,
+    this should probably work with easy workarounds for other OSes.
+    """
     def __init__(self, configuration_manager):
         super().__init__(configuration_manager)
         if os.name == "posix":

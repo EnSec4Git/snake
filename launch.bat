@@ -1,1 +1,1 @@
-python.exe -m snake.main
+python -m snake.main

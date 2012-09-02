@@ -17,6 +17,12 @@ import snake.geometry as geometry
 
 
 class LevelLoader:
+    """
+    The LevelLoader class can be used to create levels for the game.
+    Currently, it supports creating an empty level (with 1 apple),
+    loading level from file, and creating am empty level with
+    a cylinder topology.
+    """
     def create_empty_level(self, width=64, height=24):
         level = Level()
         table = []
@@ -76,9 +82,8 @@ class LevelLoader:
                 table_line = [None] * height
                 table = [copy.copy(table_line) for i in range(0, width)]
                 apple_count = 0
-                for (i,line) in enumerate(f):
-                    #print(line)
-                    for (j,ch) in enumerate(line):
+                for (i, line) in enumerate(f):
+                    for (j, ch) in enumerate(line):
                         if j >= width:
                             break
                         table[j][i] = self._cell_for_character(ch)
@@ -94,6 +99,12 @@ class LevelLoader:
 
 
 class Level:
+    """
+    The Level class contains the actual data, required to describe a level
+    in the game, like the contents of each cell, the number of apples,
+    the size of the level, the topology and the starting positions of
+    the players involved. The class is pickleable.
+    """
     CELL_WALL = 1
     CELL_APPLE = 2
     CELL_EMPTY = 3
@@ -156,8 +167,6 @@ class Level:
             else:
                 return None
         elif self.topology == Level.TOPOLOGY_VERTICAL_CYLINDER:
-            #print("ASD:", direction, "; ", point, "; ", next_point)
-            #time.sleep(1)
             if direction.x == 0:
                 #return geometry.Point((next_point.x + self.width) % self.width, next_point.y)
                 return geometry.Point(next_point.x, (next_point.y + self.height) % self.height)

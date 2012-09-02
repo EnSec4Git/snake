@@ -1,6 +1,6 @@
 #-------------------------------------------------------------------------------
 # Name:        pawn
-# Purpose:
+# Purpose:     Provide a game object, controlled by each player
 #
 # Author:      Yavor
 #
@@ -11,6 +11,11 @@
 
 
 class Pawn:
+    """
+    A class that contains the physical representation of the snake:
+        the cells that it occupies and the direction it is heading.
+        This class is pickled as part of the save game process.
+    """
     def __init__(self, position, length, direction_vector):
         cells_list = []
         for i in range(0, length):

@@ -23,6 +23,10 @@ import snake.ui as ui
 
 
 class Game:
+    """
+    This class contains high-level game logic like
+    initialization of the level, players, pawns and state.
+    """
     LOST_MESSAGE = "You've lost this game."
     WON_MESSAGE = "Player {0} has won."
 
