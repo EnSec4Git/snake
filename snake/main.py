@@ -24,6 +24,10 @@ def main():
             current_game = game.Game(configuration_manager, ui)
             current_game.start_empty_level()
             current_game.loop()
+        elif menu_choice == snake.ui.UI.ACTION_RANDOM:
+            current_game = game.Game(configuration_manager, ui)
+            current_game.start_random_level()
+            current_game.loop()
         elif menu_choice == snake.ui.UI.ACTION_QUIT:
             break
         elif menu_choice == snake.ui.UI.ACTION_LOAD:

@@ -26,6 +26,7 @@ class UI:
     ACTION_SAVE = 7
     ACTION_LOAD = 8
     ACTION_OPEN = 9
+    ACTION_RANDOM = 10
 
     def __init__(self, configuration_manager):
         self.configuration_manager = configuration_manager

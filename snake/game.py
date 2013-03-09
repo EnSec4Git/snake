@@ -54,6 +54,18 @@ class Game:
             pawns.append(game_pawn_i)
         self.state = state.State(game_level, pawns)
 
+    def start_random_level(self):
+        level_loader = level.LevelLoader()
+        game_level = level_loader.create_random_level()
+        pawns = []
+        starting_length = self.configuration_manager.get_starting_length()
+        starting_direction = geometry.FreeVector(-1, 0)
+        for i in range(0, self.player_count):
+            starting_position = game_level.player_starting_position(i)
+            game_pawn_i = pawn.Pawn(starting_position, starting_length, starting_direction)
+            pawns.append(game_pawn_i)
+        self.state = state.State(game_level, pawns)
+
     def load(self, filename):
         try:
             with open(filename + '.save', 'rb') as f:

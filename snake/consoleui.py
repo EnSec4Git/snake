@@ -128,6 +128,8 @@ class ConsoleUI(ui.UI):
             return cur_action_copy
         elif cur_action_copy == ui.UI.ACTION_SAVE:
             return cur_action_copy
+        elif cur_action_copy == ui.UI.ACTION_RANDOM:
+            return cur_action_copy
         else:
             return None
 
@@ -143,12 +145,14 @@ class ConsoleUI(ui.UI):
         pref_keys = self.configuration_manager.get_preferred_keys()
         pref_keys_rev = dict((v, k) for k, v in pref_keys.items())
         self.display_text("Press {0} to start, {1} to quit, "
-             "{2} to load and {3} to open level".format(\
+             "{2} to load and {3} to open level, {4} to open random level".format(\
                 pref_keys_rev[ui.UI.ACTION_NEW_GAME],\
                 pref_keys_rev[ui.UI.ACTION_QUIT],\
                 pref_keys_rev[ui.UI.ACTION_LOAD],\
-                pref_keys_rev[ui.UI.ACTION_OPEN]))
+                pref_keys_rev[ui.UI.ACTION_OPEN],\
+                pref_keys_rev[ui.UI.ACTION_RANDOM]))
         while True:
+            #TODO: Fix this one to be less redundant!
             character = self._cp_get_char()
             if character == pref_keys_rev[ui.UI.ACTION_NEW_GAME]:
                 return ui.UI.ACTION_NEW_GAME
@@ -158,6 +162,8 @@ class ConsoleUI(ui.UI):
                 return ui.UI.ACTION_LOAD
             elif character == pref_keys_rev[ui.UI.ACTION_OPEN]:
                 return ui.UI.ACTION_OPEN
+            elif character == pref_keys_rev[ui.UI.ACTION_RANDOM]:
+                return ui.UI.ACTION_RANDOM
             else:
                 pass
 

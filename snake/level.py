@@ -12,6 +12,7 @@
 import copy
 import ast
 import time
+import random
 
 import snake.geometry as geometry
 
@@ -61,7 +62,31 @@ class LevelLoader:
         return level
 
     def create_random_level(self):
-        raise NotImplementedError("Level.create_random_level unimplemented")
+        width = 64
+        height = 24
+        level = Level()
+        table = []
+        first_column = [Level.CELL_WALL] * height
+        table.append(first_column)
+        for i in range(1, width - 1):
+            current_column = [Level.CELL_EMPTY] * height
+            table.append(current_column)
+        last_column = copy.copy(first_column)
+        table.append(last_column)
+
+        #generate apples
+        random.seed()
+        apple_count = random.randint(3, 7)
+        for i in range(0, apple_count):
+            apple_i_x = random.randint(0, width-1)
+            apple_i_y = random.randint(0, height-1)
+            table[apple_i_x][apple_i_y] = Level.CELL_APPLE
+
+        level._set_table(table)
+        level.topology = Level.TOPOLOGY_VERTICAL_CYLINDER
+        level._starting_positions = [geometry.Point(width // 2, 2)]
+        level._apple_count = apple_count
+        return level
 
     def _cell_for_character(self, ch):
         if ch == ' ':

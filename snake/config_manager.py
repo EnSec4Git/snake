@@ -28,7 +28,8 @@ class ConfigurationManager:
                 'N': ui.UI.ACTION_NEW_GAME,
                 'P': ui.UI.ACTION_SAVE,
                 'L': ui.UI.ACTION_LOAD,
-                'O': ui.UI.ACTION_OPEN}
+                'O': ui.UI.ACTION_OPEN,
+                'D': ui.UI.ACTION_RANDOM}
 
     def get_preferred_keys_for_player(self, i):
         if i != 0:
